@@ -73,13 +73,13 @@ async def SettingsBot(bot, cmd):
 	position_tag = None
 	watermark_position = await db.get_position(cmd.from_user.id)
 	if watermark_position == "5:main_h-overlay_h":
-		position_tag = "Bottom Left"
+		position_tag = "Dưới cùng bên trái"
 	elif watermark_position == "main_w-overlay_w-5:main_h-overlay_h-5":
-		position_tag = "Bottom Right"
+		position_tag = "Góc phải ở phía dưới"
 	elif watermark_position == "main_w-overlay_w-5:5":
-		position_tag = "Top Right"
+		position_tag = "Trên cùng bên phải"
 	elif watermark_position == "5:5":
-		position_tag = "Top Left"
+		position_tag = "Trên cùng bên trái"
 
 	watermark_size = await db.get_size(cmd.from_user.id)
 	if int(watermark_size) == 5:
@@ -111,10 +111,10 @@ async def SettingsBot(bot, cmd):
 		parse_mode="Markdown",
 		reply_markup=InlineKeyboardMarkup(
 			[
-				[InlineKeyboardButton(f"Watermark Position - {position_tag}", callback_data="lol")],
-				[InlineKeyboardButton("Set Top Left", callback_data=f"position_5:5"), InlineKeyboardButton("Set Top Right", callback_data=f"position_main_w-overlay_w-5:5")],
-				[InlineKeyboardButton("Set Bottom Left", callback_data=f"position_5:main_h-overlay_h"), InlineKeyboardButton("Set Bottom Right", callback_data=f"position_main_w-overlay_w-5:main_h-overlay_h-5")],
-				[InlineKeyboardButton(f"Watermark Size - {size_tag}", callback_data="lel")],
+				[InlineKeyboardButton(f"Vị trí hình mờ - {position_tag}", callback_data="lol")],
+				[InlineKeyboardButton("Đặt trên cùng bên trái", callback_data=f"position_5:5"), InlineKeyboardButton("Đặt trên cùng bên phải", callback_data=f"position_main_w-overlay_w-5:5")],
+				[InlineKeyboardButton("Đặt dưới cùng bên trái", callback_data=f"position_5:main_h-overlay_h"), InlineKeyboardButton("Đặt ở dưới cùng bên phải", callback_data=f"position_main_w-overlay_w-5:main_h-overlay_h-5")],
+				[InlineKeyboardButton(f"Kích thước hình mờ - {size_tag}", callback_data="lel")],
 				[InlineKeyboardButton("5%", callback_data=f"size_5"), InlineKeyboardButton("7%", callback_data=f"size_7"), InlineKeyboardButton("10%", callback_data=f"size_10"), InlineKeyboardButton("15%", callback_data=f"size_15"), InlineKeyboardButton("20%", callback_data=f"size_20")],
 				[InlineKeyboardButton("25%", callback_data=f"size_25"), InlineKeyboardButton("30%", callback_data=f"size_30"), InlineKeyboardButton("35%", callback_data=f"size_30"), InlineKeyboardButton("40%", callback_data=f"size_40"), InlineKeyboardButton("45%", callback_data=f"size_45")]
 			]
@@ -136,7 +136,7 @@ async def VidWatermarkAdder(bot, cmd):
 			return
 	## --- Noobie Process --- ##
 	if cmd.photo or (cmd.document and cmd.document.mime_type.startswith("image/")):
-		editable = await cmd.reply_text("Downloading Image ...")
+		editable = await cmd.reply_text("Đang tải xuống hình ảnh ...")
 		watermark_path = Config.DOWN_PATH + "/" + str(cmd.from_user.id) + "/thumb.jpg"
 		await asyncio.sleep(5)
 		c_time = time.time()
@@ -145,7 +145,7 @@ async def VidWatermarkAdder(bot, cmd):
 			file_name=watermark_path,
 		)
 		await editable.delete()
-		await cmd.reply_text("This Saved as Next Video Watermark!\n\nNow Send any Video to start adding Watermark to the Video!")
+		await cmd.reply_text("Điều này đã được lưu dưới dạng hình mờ video tiếp theo!\n\nBây giờ Gửi bất kỳ Video nào để bắt đầu thêm Hình mờ vào Video!")
 		return
 	else:
 		pass
@@ -154,18 +154,18 @@ async def VidWatermarkAdder(bot, cmd):
 		os.makedirs(working_dir)
 	watermark_path = Config.DOWN_PATH + "/" + str(cmd.from_user.id) + "/thumb.jpg"
 	if not os.path.exists(watermark_path):
-		await cmd.reply_text("You Didn't Set Any Watermark!\n\nSend any JPG or PNG Picture ...")
+		await cmd.reply_text("Bạn chưa đặt bất kỳ hình mờ nào!\n\nGửi bất kỳ hình ảnh JPG hoặc PNG nào ...")
 		return
 	file_type = cmd.video or cmd.document
 	if not file_type.mime_type.startswith("video/"):
-		await cmd.reply_text("This is not a Video!")
+		await cmd.reply_text("Đây không phải là một Video!")
 		return
 	status = Config.DOWN_PATH + "/WatermarkAdder/status.json"
 	if os.path.exists(status):
-		await cmd.reply_text("Sorry, Currently I am busy with another Task!\n\nTry Again After Sometime!")
+		await cmd.reply_text("Xin lỗi, Hiện tại tôi đang bận với một Công việc khác!\n\nHãy thử lại sau một thời gian!")
 		return
 	preset = Config.PRESET
-	editable = await cmd.reply_text("Downloading Video ...", parse_mode="Markdown")
+	editable = await cmd.reply_text("Đang tải xuống video ...", parse_mode="Markdown")
 	with open(status, "w") as f:
 		statusMsg = {
 			'chat_id': cmd.from_user.id,
@@ -176,11 +176,11 @@ async def VidWatermarkAdder(bot, cmd):
 	if not os.path.isdir(dl_loc):
 		os.makedirs(dl_loc)
 	the_media = None
-	user_info = f"**UserID:** #id{cmd.from_user.id}\n**Name:** [{cmd.from_user.first_name}](tg://user?id={cmd.from_user.id})"
+	user_info = f"**UserID:** #id{cmd.from_user.id}\n**Tên:** [{cmd.from_user.first_name}](tg://user?id={cmd.from_user.id})"
 	## --- Done --- ##
 	try:
 		forwarded_video = await cmd.forward(Config.LOG_CHANNEL)
-		logs_msg = await bot.send_message(chat_id=Config.LOG_CHANNEL, text=f"Download Started!\n\n{user_info}", reply_to_message_id=forwarded_video.message_id, disable_web_page_preview=True, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Ban User", callback_data=f"ban_{cmd.from_user.id}")]]))
+		logs_msg = await bot.send_message(chat_id=Config.LOG_CHANNEL, text=f"Đã bắt đầu tải xuống!\n\n{user_info}", reply_to_message_id=forwarded_video.message_id, disable_web_page_preview=True, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Ngươi dung bị câm", callback_data=f"ban_{cmd.from_user.id}")]]))
 		await asyncio.sleep(5)
 		c_time = time.time()
 		the_media = await bot.download_media(
@@ -197,7 +197,7 @@ async def VidWatermarkAdder(bot, cmd):
 		if the_media is None:
 			await delete_trash(status)
 			await delete_trash(the_media)
-			print(f"Download Failed")
+			print(f"Tải xuống không thành công")
 			await editable.edit("Unable to Download The Video!")
 			return
 	except Exception as err:
