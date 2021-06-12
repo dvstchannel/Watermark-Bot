@@ -198,29 +198,29 @@ async def VidWatermarkAdder(bot, cmd):
 			await delete_trash(status)
 			await delete_trash(the_media)
 			print(f"Tải xuống không thành công")
-			await editable.edit("Unable to Download The Video!")
+			await editable.edit("Không thể tải xuống video!")
 			return
 	except Exception as err:
 		await delete_trash(status)
 		await delete_trash(the_media)
-		print(f"Download Failed: {err}")
-		await editable.edit("Unable to Download The Video!")
+		print(f"Tải xuống không thành công: {err}")
+		await editable.edit("Không thể tải xuống video!")
 		return
 	watermark_position = await db.get_position(cmd.from_user.id)
 	if watermark_position == "5:main_h-overlay_h":
-		position_tag = "Bottom Left"
+		position_tag = "Dưới cùng bên trái"
 	elif watermark_position == "main_w-overlay_w-5:main_h-overlay_h-5":
-		position_tag = "Bottom Right"
+		position_tag = "Góc phải ở phía dưới"
 	elif watermark_position == "main_w-overlay_w-5:5":
-		position_tag = "Top Right"
+		position_tag = "Trên cùng bên phải"
 	elif watermark_position == "5:5":
-		position_tag = "Top Left"
+		position_tag = "Trên cùng bên trái"
 	else:
-		position_tag = "Top Left"
+		position_tag = "Trên cùng bên trái"
 		watermark_position = "5:5"
 
 	watermark_size = await db.get_size(cmd.from_user.id)
-	await editable.edit(f"Trying to Add Watermark to the Video at {position_tag} Corner ...\n\nPlease Wait!")
+	await editable.edit(f"Đang cố gắng thêm hình mờ vào video tại {position_tag} Corner ...\n\nVui lòng đợi!")
 	duration = 0
 	metadata = extractMetadata(createParser(the_media))
 	if metadata.has("duration"):
@@ -304,7 +304,7 @@ async def VidWatermarkAdder(bot, cmd):
 				await logs_msg.edit("Successfully Uploaded File to Streamtape!\n\nI am Free Now!", parse_mode="Markdown", disable_web_page_preview=True)
 		except Exception as e:
 			print(f"Error: {e}")
-			await editable.edit("Sorry, Something went wrong!\n\nCan't Upload to Streamtape. You can report at [Support Group](https://t.me/linux_repo).")
+			await editable.edit("Sorry, Something went wrong!\n\nCan't Upload to Streamtape. You can report at [Support Group](https://t.me/hisabo).")
 			await logs_msg.edit(f"Got Error While Uploading to Streamtape!\n\nError: {e}")
 		await delete_all()
 		return
@@ -387,7 +387,7 @@ async def button(bot, cmd: CallbackQuery):
 				user = await bot.get_chat_member(int(Config.UPDATES_CHANNEL), cmd.message.chat.id)
 				if user.status == "kicked":
 					await cmd.message.edit(
-						text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
+						text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/hisabo).",
 						parse_mode="markdown",
 						disable_web_page_preview=True
 					)
@@ -410,7 +410,7 @@ async def button(bot, cmd: CallbackQuery):
 				return
 			except Exception:
 				await cmd.message.edit(
-					text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
+					text="Something went Wrong. Contact my [Support Group](https://t.me/hisabo).",
 					parse_mode="markdown",
 					disable_web_page_preview=True
 				)
@@ -418,7 +418,7 @@ async def button(bot, cmd: CallbackQuery):
 		await cmd.message.edit(
 			text=Config.USAGE_WATERMARK_ADDER,
 			parse_mode="Markdown",
-			reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Developer", url="https://t.me/AbirHasan2005"), InlineKeyboardButton("Support Group", url="https://t.me/linux_repo")], [InlineKeyboardButton("Bots Channel", url="https://t.me/Discovery_Updates")]]),
+			reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Developer", url="https://t.me/HiSabo"), InlineKeyboardButton("Support Group", url="https://t.me/Kenhsex")], [InlineKeyboardButton("Bots Channel", url="https://t.me/NangCuc")]]),
 			disable_web_page_preview=True
 		)
 
@@ -435,7 +435,7 @@ async def button(bot, cmd: CallbackQuery):
 				user = await bot.get_chat_member(int(Config.UPDATES_CHANNEL), cmd.message.chat.id)
 				if user.status == "kicked":
 					await cmd.message.edit(
-						text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
+						text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/hisabo).",
 						parse_mode="markdown",
 						disable_web_page_preview=True
 					)
@@ -458,7 +458,7 @@ async def button(bot, cmd: CallbackQuery):
 				return
 			except Exception:
 				await cmd.message.edit(
-					text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
+					text="Something went Wrong. Contact my [Support Group](https://t.me/hisabo).",
 					parse_mode="markdown",
 					disable_web_page_preview=True
 				)
@@ -511,8 +511,8 @@ async def button(bot, cmd: CallbackQuery):
 				parse_mode="Markdown",
 				reply_markup=InlineKeyboardMarkup(
 					[
-						[InlineKeyboardButton(f"Watermark Position - {position_tag}", callback_data="lol")],
-						[InlineKeyboardButton("Set Top Left", callback_data=f"position_5:5"), InlineKeyboardButton("Set Top Right", callback_data=f"position_main_w-overlay_w-5:5")],
+						[InlineKeyboardButton(f"Vị trí hình mờ - {position_tag}", callback_data="lol")],
+						[InlineKeyboardButton("Đặt trên cùng bên trái", callback_data=f"position_5:5"), InlineKeyboardButton("Set Top Right", callback_data=f"position_main_w-overlay_w-5:5")],
 						[InlineKeyboardButton("Set Bottom Left", callback_data=f"position_5:main_h-overlay_h"), InlineKeyboardButton("Set Bottom Right", callback_data=f"position_main_w-overlay_w-5:main_h-overlay_h-5")],
 						[InlineKeyboardButton(f"Watermark Size - {size_tag}", callback_data="lel")],
 						[InlineKeyboardButton("5%", callback_data=f"size_5"), InlineKeyboardButton("7%", callback_data=f"size_7"), InlineKeyboardButton("10%", callback_data=f"size_10"), InlineKeyboardButton("15%", callback_data=f"size_15"), InlineKeyboardButton("20%", callback_data=f"size_20")],
